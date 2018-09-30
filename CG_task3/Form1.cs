@@ -30,7 +30,7 @@ namespace CG_task3
         {
             
             InitializeComponent();
-            colored_lines =new Dictionary<int, List<Tuple<int, int>>>();
+            colored_lines =new Dictionary<int, List<Tuple<int, int>>>(); //  Y : (X1,X2) (X3,X4) это две горизонтальные линии
             full_border = new List<Point>();
             ColorBox.BackColor = CurrentColor;
             border = new List<Point>();
@@ -83,9 +83,11 @@ namespace CG_task3
 
         private void ColorButton_Click(object sender, EventArgs e)
         {
+            this.Hide();
             colorDialog1.ShowDialog();
             CurrentColor = colorDialog1.Color;
             ColorBox.BackColor = CurrentColor;
+            this.Show();
         }
 
         private void LoadButton_Click(object sender, EventArgs e)

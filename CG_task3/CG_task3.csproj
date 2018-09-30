@@ -83,5 +83,8 @@
   <ItemGroup>
     <None Include="Resources\lassoicon.bmp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bucketicon.bmp" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
