@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Painter));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.ColorButton = new System.Windows.Forms.Button();
             this.LoadButton = new System.Windows.Forms.Button();
@@ -39,7 +39,7 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.BorderPictureBox = new System.Windows.Forms.PictureBox();
             this.ColorBox = new System.Windows.Forms.PictureBox();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -62,15 +62,15 @@
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // toolStripButton1
+            // toolStripButton2
             // 
-            this.toolStripButton1.CheckOnClick = true;
-            this.toolStripButton1.Image = global::CG_task3.Properties.Resources.lassoicon;
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(62, 22);
-            this.toolStripButton1.Text = "Border";
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton_Click);
+            this.toolStripButton2.CheckOnClick = true;
+            this.toolStripButton2.Image = global::CG_task3.Properties.Resources.bucketicon;
+            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.Size = new System.Drawing.Size(42, 22);
+            this.toolStripButton2.Text = "Fill";
+            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton_Click);
             // 
             // ColorButton
             // 
@@ -115,7 +115,8 @@
             // 
             this.BorderPictureBox.BackColor = System.Drawing.Color.Transparent;
             this.BorderPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.BorderPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.BorderPictureBox.ErrorImage = null;
+            this.BorderPictureBox.InitialImage = null;
             this.BorderPictureBox.Location = new System.Drawing.Point(12, 27);
             this.BorderPictureBox.Name = "BorderPictureBox";
             this.BorderPictureBox.Size = new System.Drawing.Size(592, 411);
@@ -134,16 +135,15 @@
             this.ColorBox.TabIndex = 5;
             this.ColorBox.TabStop = false;
             // 
-            // toolStripButton2
+            // toolStripButton1
             // 
-            this.toolStripButton2.CheckOnClick = true;
-            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton2.Text = "Fill";
-            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton_Click);
+            this.toolStripButton1.CheckOnClick = true;
+            this.toolStripButton1.Image = global::CG_task3.Properties.Resources.lassoicon;
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(62, 22);
+            this.toolStripButton1.Text = "Border";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton_Click);
             // 
             // toolStripButton3
             // 
@@ -171,26 +171,30 @@
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.White;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(12, 27);
+            this.pictureBox1.Location = new System.Drawing.Point(12, 28);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(592, 411);
+            this.pictureBox1.Size = new System.Drawing.Size(592, 410);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
             // 
             // Painter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(624, 450);
-            this.Controls.Add(this.BorderPictureBox);
             this.Controls.Add(this.ColorBox);
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.LoadButton);
             this.Controls.Add(this.ColorButton);
             this.Controls.Add(this.toolStrip1);
+            this.Controls.Add(this.BorderPictureBox);
             this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Painter";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
