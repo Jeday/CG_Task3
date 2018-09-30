@@ -128,9 +128,12 @@ namespace CG_task3
                     border.Add(e.Location);
                     BorderPictureBox.Invalidate();
                 }
-                else if (CurrentTool == Tools.Fill) {
+                else if (CurrentTool == Tools.Fill)
+                {
                     fill_border(e.Location);
                 }
+                else if (CurrentTool == Tools.MagicWand)
+                    magic_border(e.Location);
             }
         }
 
@@ -256,6 +259,87 @@ namespace CG_task3
             rec_fill(start);
            
             
+        }
+        private Point next_point(int dir, Point p)
+        {
+            switch (dir)
+            {
+                case 0:
+                    return new Point(p.X + 1, p.Y);
+                case 1:
+                    return new Point(p.X + 1, p.Y + 1);
+                case 2:
+                    return new Point(p.X, p.Y + 1);
+                case 3:
+                    return new Point(p.X - 1, p.Y + 1);
+                case 4:
+                    return new Point(p.X - 1, p.Y);
+                case 5:
+                    return new Point(p.X - 1, p.Y - 1);
+                case 6:
+                    return new Point(p.X, p.Y - 1);
+                default:
+                    return new Point(p.X + 1, p.Y - 1);
+            }
+        }
+
+        private void magic_border(Point start)
+        {
+            border.Clear();
+            full_border.Clear();
+
+            Color clr_img = DrawArea.GetPixel(start.X, start.Y);
+            Color clr_border = clr_img;
+
+
+            while (clr_img == clr_border && start.X < DrawArea.Width) {
+                start.X += 1;
+                clr_border = DrawArea.GetPixel(start.X, start.Y);
+            }
+
+            Point start_border = new Point(start.X, start.Y);
+
+            Point prev_cur = new Point(start.X, start.Y-1);
+            Point cur = prev_cur;
+            int prev_dir = 8;
+            int dir = 6;
+
+            while(DrawArea.GetPixel(cur.X, cur.Y) != clr_border){
+                if (dir + 1 > 7)
+                    dir = 0;
+                else
+                    dir += 1;
+                cur = next_point(dir, prev_cur);
+            }
+            border.Add(cur);
+            prev_cur = cur;
+            prev_dir = dir;
+
+            while (cur.X != start_border.X && cur.Y != start_border.Y)
+            {
+                if (dir - 2 < 0)
+                    dir = 6;
+                else
+                    dir -= 2;
+                cur = next_point(dir, prev_cur);
+
+                while(DrawArea.GetPixel(cur.X, cur.Y) != clr_border)
+                {
+                    if (dir + 1 > 7)
+                        dir = 0;
+                    else
+                        dir += 1;
+                    cur = next_point(dir, prev_cur);
+                }
+
+                border.Add(cur);
+                prev_cur = cur;
+                prev_dir = dir;
+            }
+
+            full_border = border;
+
+            BorderPictureBox.Invalidate();
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
