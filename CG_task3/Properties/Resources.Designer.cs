@@ -73,9 +73,39 @@ namespace CG_task3.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ImageFillIcon {
+            get {
+                object obj = ResourceManager.GetObject("ImageFillIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap lassoicon {
             get {
                 object obj = ResourceManager.GetObject("lassoicon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap MarkerIcon {
+            get {
+                object obj = ResourceManager.GetObject("MarkerIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap WandIcon {
+            get {
+                object obj = ResourceManager.GetObject("WandIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
