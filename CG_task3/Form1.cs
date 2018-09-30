@@ -349,14 +349,15 @@ namespace CG_task3
             Color clr_border = clr_img;
 
 
-            while (clr_img == clr_border && start.X < DrawArea.Width) {
+            while (clr_img == clr_border && start.X < DrawArea.Width-1) {
                 start.X += 1;
                 clr_border = DrawArea.GetPixel(start.X, start.Y);
             }
 
             Point start_border = new Point(start.X, start.Y);
 
-            Point prev_cur = new Point(start.X, start.Y-1);
+            start.Y -= 1;
+            Point prev_cur = new Point(start.X, start.Y);
             Point cur = prev_cur;
             int prev_dir = 8;
             int dir = 6;
@@ -372,7 +373,7 @@ namespace CG_task3
             prev_cur = cur;
             prev_dir = dir;
 
-            while (cur.X != start_border.X && cur.Y != start_border.Y)
+            while (cur != start_border)
             {
                 if (dir - 2 < 0)
                     dir = 6;
@@ -394,7 +395,7 @@ namespace CG_task3
                 prev_dir = dir;
             }
 
-            full_border = border;
+            full_border = new List<Point>(border);
 
             BorderPictureBox.Invalidate();
         }
