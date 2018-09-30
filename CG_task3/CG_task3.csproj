@@ -87,9 +87,6 @@
     <None Include="Resources\bucketicon.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\MagicWandIcon.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\WandIcon.bmp" />
   </ItemGroup>
   <ItemGroup>

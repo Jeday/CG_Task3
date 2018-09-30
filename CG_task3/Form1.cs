@@ -268,8 +268,6 @@ namespace CG_task3
             }
         }
 
-       
-
         private void CopyPixels(Point to_start, Point to_finish, Point from_start) {
             to_finish.X += 1;
             for (Point i = to_start; i != to_finish; i.X += 1) {
