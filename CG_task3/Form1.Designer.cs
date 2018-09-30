@@ -28,20 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Painter));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.ColorButton = new System.Windows.Forms.Button();
             this.LoadButton = new System.Windows.Forms.Button();
             this.SaveButton = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.BorderPictureBox = new System.Windows.Forms.PictureBox();
+            this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
             this.ColorBox = new System.Windows.Forms.PictureBox();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.BorderPictureBox)).BeginInit();
@@ -55,36 +55,17 @@
             this.toolStripButton1,
             this.toolStripButton2,
             this.toolStripButton3,
-            this.toolStripButton4});
+            this.toolStripButton4,
+            this.toolStripButton5});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(624, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // toolStripButton2
-            // 
-            this.toolStripButton2.CheckOnClick = true;
-            this.toolStripButton2.Image = global::CG_task3.Properties.Resources.bucketicon;
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(42, 22);
-            this.toolStripButton2.Text = "Fill";
-            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton_Click);
-            // 
-            // ColorButton
-            // 
-            this.ColorButton.Location = new System.Drawing.Point(232, 2);
-            this.ColorButton.Name = "ColorButton";
-            this.ColorButton.Size = new System.Drawing.Size(75, 23);
-            this.ColorButton.TabIndex = 2;
-            this.ColorButton.Text = "Color";
-            this.ColorButton.UseVisualStyleBackColor = true;
-            this.ColorButton.Click += new System.EventHandler(this.ColorButton_Click);
-            // 
             // LoadButton
             // 
-            this.LoadButton.Location = new System.Drawing.Point(313, 2);
+            this.LoadButton.Location = new System.Drawing.Point(448, 2);
             this.LoadButton.Name = "LoadButton";
             this.LoadButton.Size = new System.Drawing.Size(75, 23);
             this.LoadButton.TabIndex = 3;
@@ -94,7 +75,7 @@
             // 
             // SaveButton
             // 
-            this.SaveButton.Location = new System.Drawing.Point(394, 2);
+            this.SaveButton.Location = new System.Drawing.Point(529, 2);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(75, 23);
             this.SaveButton.TabIndex = 4;
@@ -127,13 +108,20 @@
             this.BorderPictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
             this.BorderPictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
             // 
+            // openFileDialog2
+            // 
+            this.openFileDialog2.FileName = "openFileDialog2";
+            this.openFileDialog2.Title = "Choose Image to Fill";
+            this.openFileDialog2.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog2_FileOk);
+            // 
             // ColorBox
             // 
-            this.ColorBox.Location = new System.Drawing.Point(204, 2);
+            this.ColorBox.Location = new System.Drawing.Point(420, 2);
             this.ColorBox.Name = "ColorBox";
             this.ColorBox.Size = new System.Drawing.Size(22, 23);
             this.ColorBox.TabIndex = 5;
             this.ColorBox.TabStop = false;
+            this.ColorBox.Click += new System.EventHandler(this.ColorButton_Click);
             // 
             // toolStripButton1
             // 
@@ -145,27 +133,45 @@
             this.toolStripButton1.Text = "Border";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton_Click);
             // 
+            // toolStripButton2
+            // 
+            this.toolStripButton2.CheckOnClick = true;
+            this.toolStripButton2.Image = global::CG_task3.Properties.Resources.bucketicon;
+            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.Size = new System.Drawing.Size(42, 22);
+            this.toolStripButton2.Text = "Fill";
+            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton_Click);
+            // 
             // toolStripButton3
             // 
             this.toolStripButton3.CheckOnClick = true;
-            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
+            this.toolStripButton3.Image = global::CG_task3.Properties.Resources.WandIcon;
             this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton3.Size = new System.Drawing.Size(94, 22);
             this.toolStripButton3.Text = "Magic Wand";
             this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton_Click);
             // 
             // toolStripButton4
             // 
             this.toolStripButton4.CheckOnClick = true;
-            this.toolStripButton4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton4.Image")));
+            this.toolStripButton4.Image = global::CG_task3.Properties.Resources.MarkerIcon;
             this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton4.Name = "toolStripButton4";
-            this.toolStripButton4.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton4.Size = new System.Drawing.Size(64, 22);
             this.toolStripButton4.Text = "Marker";
             this.toolStripButton4.Click += new System.EventHandler(this.toolStripButton_Click);
+            // 
+            // toolStripButton5
+            // 
+            this.toolStripButton5.CheckOnClick = true;
+            this.toolStripButton5.Image = global::CG_task3.Properties.Resources.ImageFillIcon;
+            this.toolStripButton5.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton5.Name = "toolStripButton5";
+            this.toolStripButton5.Size = new System.Drawing.Size(78, 22);
+            this.toolStripButton5.Text = "Image Fill";
+            this.toolStripButton5.Click += new System.EventHandler(this.toolStripButton_Click);
             // 
             // pictureBox1
             // 
@@ -188,7 +194,6 @@
             this.Controls.Add(this.ColorBox);
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.LoadButton);
-            this.Controls.Add(this.ColorButton);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.BorderPictureBox);
             this.Controls.Add(this.pictureBox1);
@@ -217,13 +222,14 @@
         private System.Windows.Forms.ToolStripButton toolStripButton3;
         private System.Windows.Forms.ToolStripButton toolStripButton4;
         private System.Windows.Forms.ColorDialog colorDialog1;
-        private System.Windows.Forms.Button ColorButton;
         private System.Windows.Forms.Button LoadButton;
         private System.Windows.Forms.Button SaveButton;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.PictureBox ColorBox;
         private System.Windows.Forms.PictureBox BorderPictureBox;
+        private System.Windows.Forms.ToolStripButton toolStripButton5;
+        private System.Windows.Forms.OpenFileDialog openFileDialog2;
     }
 }
 

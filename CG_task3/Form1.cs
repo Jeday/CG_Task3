@@ -12,7 +12,7 @@ namespace CG_task3
 {
     public partial class Painter : Form
     {
-        private enum Tools { None, BorderMaker, MagicWand, Fill, Marker }
+        private enum Tools { None, BorderMaker, MagicWand, Fill, Marker, ImageFill}
         private Tools CurrentTool = Tools.None;
         private Color CurrentColor = Color.White;
         private Graphics g;
@@ -22,7 +22,8 @@ namespace CG_task3
         private Pen BorderPen;
         private List<Point> full_border;
         private Dictionary<int, List<Tuple<int, int>>> colored_lines;
-        public Bitmap DrawArea;
+        private Bitmap DrawArea;
+        private Bitmap ImageFill;
 
         static  private void Swap<T>(ref T v1, ref T v2) { T v3 = v1; v1 = v2; v2 = v3; }
 
@@ -69,6 +70,9 @@ namespace CG_task3
                 case "Marker":
                     CurrentTool = Tools.Marker;
                     break;
+                case "Image Fill":
+                    CurrentTool = Tools.ImageFill;
+                    break;
                 default:
                     CurrentTool = Tools.None;
                     break;
@@ -83,13 +87,13 @@ namespace CG_task3
 
         private void ColorButton_Click(object sender, EventArgs e)
         {
-            this.Hide();
+            Hide();
             colorDialog1.ShowDialog();
             CurrentColor = colorDialog1.Color;
             ColorBox.BackColor = CurrentColor;
-            this.Show();
-            this.WindowState = FormWindowState.Normal;
-            this.TopMost = true;
+            Show();
+            WindowState = FormWindowState.Normal;
+            TopMost = true;
         }
 
         private void LoadButton_Click(object sender, EventArgs e)
@@ -129,7 +133,19 @@ namespace CG_task3
                     BorderPictureBox.Invalidate();
                 }
                 else if (CurrentTool == Tools.Fill) {
-                    fill_border(e.Location);
+                    colored_lines.Clear();
+                   //if (full_border.Count()>0)
+                        rec_fill(e.Location);
+                }
+                else if(CurrentTool == Tools.ImageFill)
+                {
+                    colored_lines.Clear();
+                    openFileDialog2.ShowDialog();
+                    if (openFileDialog2.FileName == "")
+                        return;
+                    ImageFill = Image.FromFile(openFileDialog2.FileName) as Bitmap;
+                    //if (full_border.Count > 0)
+                        fill_image(e.Location, new Point(0, 0));
                 }
             }
         }
@@ -151,6 +167,18 @@ namespace CG_task3
             {
                 BorderIsDrawn = false;
                 BorderPictureBox.Invalidate();
+
+                if (border.Count == 0)
+                    return;
+                full_border.Clear();
+                full_border = new List<Point>(); // all pixels of border
+                border.Add(border.First());  // make border circullar
+                for (int i = 0; i < border.Count() - 1; i++)
+                {
+                    bresenham(border[i].X, border[i].Y, border[i + 1].X, border[i + 1].Y, ref full_border);//calculate all points of border 1->2, 2 ->3 .. n->1
+                    full_border.RemoveAt(full_border.Count() - 1); // remove duplicate
+
+                }
             }
         }
 
@@ -223,7 +251,7 @@ namespace CG_task3
                 while (!full_border.Contains(Start) && Start.X >= 0)
                     Start.X -= 1;
                 Start.X += 1;
-                while (!full_border.Contains(Finish)  && Finish.X<=pictureBox1.Width)
+                while (!full_border.Contains(Finish)  && Finish.X<pictureBox1.Width)
                     Finish.X += 1;
                 Finish.X -= 1;
                 if(colored_lines.ContainsKey(p.Y))
@@ -238,29 +266,66 @@ namespace CG_task3
                 }
 
             }
-        } 
-
-        private void fill_border(Point start) {
-            if (border.Count == 0)
-                return;
-            full_border.Clear();
-            colored_lines.Clear();
-            full_border = new List<Point>(); // all pixels of border
-            border.Add(border.First());  // make border circullar
-            for (int i = 0; i < border.Count() - 1; i ++) { 
-                bresenham(border[i].X, border[i].Y, border[i + 1].X ,border[i + 1].Y, ref full_border);//calculate all points of border 1->2, 2 ->3 .. n->1
-                full_border.RemoveAt(full_border.Count() - 1); // remove duplicate
-                
-            }
-
-            rec_fill(start);
-           
-            
         }
+
+       
+
+        private void CopyPixels(Point to_start, Point to_finish, Point from_start) {
+            to_finish.X += 1;
+            for (Point i = to_start; i != to_finish; i.X += 1) {
+                if (from_start.X  >= ImageFill.Width)
+                    from_start.X = 0;
+                DrawArea.SetPixel(i.X,i.Y,ImageFill.GetPixel(from_start.X, from_start.Y));
+                from_start.X += 1;
+            }
+        }
+
+        private void fill_image(Point p, Point loaded_p) {
+            if (!full_border.Contains(p) && !is_colored(p) && p.X >= 0 && p.X < pictureBox1.Width && p.Y >= 0 && p.Y < pictureBox1.Height)
+            {
+                if (loaded_p.Y >= ImageFill.Height)
+                    loaded_p.Y = 0;
+                if (loaded_p.Y <0)
+                    loaded_p.Y = ImageFill.Height-1;
+                Point Start = new Point(p.X - 1, p.Y);
+                Point Finish = new Point(p.X + 1, p.Y);
+                while (!full_border.Contains(Start) && Start.X >= 0)
+                    Start.X -= 1;
+                Start.X += 1;
+                while (!full_border.Contains(Finish) && Finish.X < pictureBox1.Width)
+                    Finish.X += 1;
+                Finish.X -= 1;
+                if (colored_lines.ContainsKey(p.Y))
+                    colored_lines[p.Y].Add(new Tuple<int, int>(Start.X, Finish.X));
+                else
+                    colored_lines.Add(p.Y, new List<Tuple<int, int>> { new Tuple<int, int>(Start.X, Finish.X) });
+                Point from_start = new Point(Math.Abs(loaded_p.X - ((p.X - Start.X) % ImageFill.Width)), loaded_p.Y);
+                CopyPixels(Start, Finish, from_start);
+                pictureBox1.Refresh();
+                for (int i = Start.X; i <= Finish.X; ++i)
+                {
+                    if (from_start.X == ImageFill.Width)
+                        from_start.X = 0;
+                    from_start.Y += 1;
+                    fill_image(new Point(i, p.Y + 1), from_start);
+                    from_start.Y -= 2;
+                    fill_image(new Point(i, p.Y - 1), from_start);
+                    from_start.Y += 1;
+                    from_start.X += 1;
+                }
+
+            }
+        }
+
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
             pictureBox1.Image = DrawArea;
+        }
+
+        private void openFileDialog2_FileOk(object sender, CancelEventArgs e)
+        {
+
         }
     }
 }

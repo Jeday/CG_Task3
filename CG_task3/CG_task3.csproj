@@ -86,5 +86,17 @@
   <ItemGroup>
     <None Include="Resources\bucketicon.bmp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MagicWandIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\WandIcon.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MarkerIcon.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ImageFillIcon.bmp" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
