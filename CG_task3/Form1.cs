@@ -88,6 +88,8 @@ namespace CG_task3
             CurrentColor = colorDialog1.Color;
             ColorBox.BackColor = CurrentColor;
             this.Show();
+            this.WindowState = FormWindowState.Normal;
+            this.TopMost = true;
         }
 
         private void LoadButton_Click(object sender, EventArgs e)
