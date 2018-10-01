@@ -179,17 +179,30 @@ namespace CG_task3
                             x++;
                     }
 
-                   
 
-                    int top = full_border.Last().Y;
-                    for (int y = full_border.First().Y; y != top; y++) {
-                        List<Point> ps = full_border.Where((Point p) => { return (p.Y == y) && is_not_hill(p); }).ToList();
-                        colored_lines.Add(Start.Y, new List<Tuple<int, int>>());
-                        for (int i = 0; i < ps.Count - 1; i++) {
-                            ScanLine(ps[i], ps[i + 1], c);
+                    if (full_border.Count == 0)
+                    {
+                        for (int y =0; y != DrawArea.Height; y++)
+                        {
+                            colored_lines.Add(y, new List<Tuple<int, int>>());
+                            ScanLine(new Point(0,y), new Point(DrawArea.Width, y), c);
+                            
+                            
                         }
                     }
-
+                    else
+                    {
+                        int top = full_border.Last().Y;
+                        for (int y = full_border.First().Y; y != top; y++)
+                        {
+                            List<Point> ps = full_border.Where((Point p) => { return (p.Y == y) && is_not_hill(p); }).ToList();
+                            colored_lines.Add(y, new List<Tuple<int, int>>());
+                            for (int i = 0; i < ps.Count - 1; i++)
+                            {
+                                ScanLine(ps[i], ps[i + 1], c);
+                            }
+                        }
+                    }
 
                     BorderPictureBox.Invalidate();
 
@@ -248,9 +261,9 @@ namespace CG_task3
                 }
                 else if (!equal_color(DrawArea.GetPixel(p1.X, p1.Y), c)) // если найденная новая граница
                 {
-                   // DrawArea.SetPixel(p1.X, p1.Y, Color.Red);
-                    magic_border(p1, Start, c, out int x,true); // обводим ее
-                    p1.X = x;  // получаем крайнюю точку 
+                    DrawArea.SetPixel(p1.X, p1.Y, Color.Red);
+                   // magic_border(p1, Start, c, out int x,true); // обводим ее
+                   // p1.X = x;  // получаем крайнюю точку 
 
                 }
                 
@@ -381,13 +394,13 @@ namespace CG_task3
         }
 
         private void rec_fill(Point p) {
-            if (!full_border.Contains(p) && !is_colored(p) && p.X >= 0 && p.X <= pictureBox1.Width && p.Y >= 0 && p.Y <= pictureBox1.Height) {
+            if (!inner_border.Contains(p) && !full_border.Contains(p) && !is_colored(p) && p.X >= 0 && p.X <= pictureBox1.Width && p.Y >= 0 && p.Y <= pictureBox1.Height) {
                 Point Start = new Point(p.X - 1, p.Y);
                 Point Finish = new Point(p.X + 1, p.Y);
-                while (!full_border.Contains(Start) && Start.X >= 0)
+                while (!inner_border.Contains(p) && !full_border.Contains(Start) && Start.X >= 0)
                     Start.X -= 1;
                 Start.X += 1;
-                while (!full_border.Contains(Finish)  && Finish.X<pictureBox1.Width)
+                while (!inner_border.Contains(p) && !full_border.Contains(Finish)  && Finish.X<pictureBox1.Width)
                     Finish.X += 1;
                 Finish.X -= 1;
                 if(colored_lines.ContainsKey(p.Y))
@@ -576,6 +589,9 @@ namespace CG_task3
         {
             ColorButton_Click(sender, e);
         }
+
+
+
     }
 
     public class PointCompare : IComparer<Point>
