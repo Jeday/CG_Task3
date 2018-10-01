@@ -95,5 +95,8 @@
   <ItemGroup>
     <None Include="Resources\ImageFillIcon.bmp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ColorIcon.bmp" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

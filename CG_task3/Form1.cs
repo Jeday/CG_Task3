@@ -524,6 +524,11 @@ namespace CG_task3
         {
 
         }
+
+        private void toolStripLabel1_Click(object sender, EventArgs e)
+        {
+            ColorButton_Click(sender, e);
+        }
     }
 
     public class PointCompare : IComparer<Point>

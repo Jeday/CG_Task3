@@ -73,6 +73,16 @@ namespace CG_task3.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ColorIcon {
+            get {
+                object obj = ResourceManager.GetObject("ColorIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ImageFillIcon {
             get {
                 object obj = ResourceManager.GetObject("ImageFillIcon", resourceCulture);
