@@ -10,17 +10,19 @@ using System.Windows.Forms;
 
 namespace CG_task3
 {
+ 
+
     public partial class Painter : Form
     {
         private enum Tools { None, BorderMaker, MagicWand, Fill, Marker, ImageFill}
         private Tools CurrentTool = Tools.None;
-        private Color CurrentColor = Color.White;
+        private Color CurrentColor = Color.Gold;
         private Graphics g;
         private Graphics borderboxGraphics;
         private List<List<Point>> border;
         private bool BorderIsDrawn = false;
         private Pen BorderPen;
-        private List<Point> full_border;
+        private SortedSet<Point> full_border;
         private Dictionary<int, List<Tuple<int, int>>> colored_lines;
         private Bitmap DrawArea;
         private Bitmap ImageFill;
@@ -35,7 +37,7 @@ namespace CG_task3
             
             InitializeComponent();
             colored_lines =new Dictionary<int, List<Tuple<int, int>>>(); //  Y : (X1,X2) (X3,X4) это две горизонтальные линии
-            full_border = new List<Point>();
+            full_border =  new SortedSet<Point>(new PointCompare());
             ColorBox.BackColor = CurrentColor;
             border = new List<List<Point>>();
             BorderPen = new Pen(Color.Black, 2);
@@ -142,7 +144,7 @@ namespace CG_task3
                 else if (CurrentTool == Tools.Fill)
                 {
                     colored_lines.Clear();
-                    //if (full_border.Count()>0)
+            
                     rec_fill(e.Location);
                 }
                 else if (CurrentTool == Tools.ImageFill)
@@ -152,7 +154,7 @@ namespace CG_task3
                     if (openFileDialog2.FileName == "")
                         return;
                     ImageFill = Image.FromFile(openFileDialog2.FileName) as Bitmap;
-                    //if (full_border.Count > 0)
+                    
                     fill_image(e.Location, new Point(0, 0));
                 }
                 else if (CurrentTool == Tools.MagicWand) {
@@ -163,13 +165,15 @@ namespace CG_task3
                     Point start = e.Location;
                     x = start.X;
                     Color c = DrawArea.GetPixel(x, start.Y);
-                    while (x < DrawArea.Width) {
+                    while (x < DrawArea.Width)
+                    {
                         Color _c = DrawArea.GetPixel(x, start.Y);
+
                         if (!equal_color(_c,c) && magic_border(new Point(x, start.Y), start, c, out x))
                             break;
                         else
                             x++;
-                    }
+                    }      
 
                     BorderPictureBox.Invalidate();
 
@@ -206,12 +210,12 @@ namespace CG_task3
                 if (border.First().Count == 0)
                     return;
                 full_border.Clear();
-                full_border = new List<Point>(); // all pixels of border
+                 // all pixels of border
                 border.First().Add(border.First().First());  // make border circullar
                 for (int i = 0; i < border.First().Count() - 1; i++)
                 {
                     bresenham(border.First()[i].X, border.First()[i].Y, border.First()[i + 1].X, border.First()[i + 1].Y, ref full_border);//calculate all points of border 1->2, 2 ->3 .. n->1
-                    full_border.RemoveAt(full_border.Count() - 1); // remove duplicate
+                   // full_border.RemoveAt(full_border.Count() - 1); // remove duplicate
 
                 }
             }
@@ -233,7 +237,7 @@ namespace CG_task3
             }
         }
 
-        private void bresenham(int x, int y, int x2, int y2, ref List<Point> ls)
+        private void bresenham(int x, int y, int x2, int y2, ref  SortedSet<Point> ls)
         {
             int w = x2 - x;
             int h = y2 - y;
@@ -386,7 +390,7 @@ namespace CG_task3
 
             List<Point> local_border = new List<Point>();
             int count_intersections = 0;
-
+            List<int> intersct = new List< int>();
             Point LeftmostBeam = new Point(start.X, start.Y);
             Point RightMostBeam = new Point(start.X, start.Y);
             Point curr_p = new Point(start.X, start.Y);
@@ -410,7 +414,7 @@ namespace CG_task3
 
                 full_border.Add(curr_p);
                 local_border.Add(curr_p);
-                curr_p = view_p;
+                
 
                 if (curr_p.Y == beam_start.Y) {
                     if (curr_p.X > RightMostBeam.X)
@@ -418,8 +422,11 @@ namespace CG_task3
                     if (curr_p.X < LeftmostBeam.X)
                         LeftmostBeam = curr_p;
                     if (curr_p.X > beam_start.X)
-                        count_intersections++;
+                    {
+                        intersct.Add(curr_p.X);
+                    }
                 }
+                curr_p = view_p;
 
                 if (dir - 2 < 0)
                     dir += 8;
@@ -429,8 +436,17 @@ namespace CG_task3
                     break;
             } while (curr_p != start);
 
-            border.Add(local_border);
+            intersct.Sort();
+            int old_x = int.MinValue;
+            foreach(var x in intersct) {
+                if (old_x + 1 != x)
+                    count_intersections++;
+                 old_x = x;       
+        
+            }
 
+
+            border.Add(local_border);
             rightmost = RightMostBeam.X;
             if (RightMostBeam == LeftmostBeam)
                 return false;
@@ -455,6 +471,18 @@ namespace CG_task3
         private void toolStripLabel1_Click(object sender, EventArgs e)
         {
             ColorButton_Click(sender, e);
+        }
+    }
+
+    public class PointCompare : IComparer<Point>
+    {
+
+        public int Compare(Point x, Point y)
+        {
+            if (x.Y.CompareTo(y.Y) != 0)
+                return x.Y.CompareTo(y.Y);
+            else
+                return x.X.CompareTo(y.X);
         }
     }
 }
