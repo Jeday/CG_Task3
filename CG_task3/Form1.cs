@@ -23,6 +23,7 @@ namespace CG_task3
         private bool BorderIsDrawn = false;
         private Pen BorderPen;
         private SortedSet<Point> full_border;
+        private SortedSet<Point> inner_border;
         private Dictionary<int, List<Tuple<int, int>>> colored_lines;
         private Bitmap DrawArea;
         private Bitmap ImageFill;
@@ -38,6 +39,7 @@ namespace CG_task3
             InitializeComponent();
             colored_lines =new Dictionary<int, List<Tuple<int, int>>>(); //  Y : (X1,X2) (X3,X4) это две горизонтальные линии
             full_border =  new SortedSet<Point>(new PointCompare());
+            inner_border = new SortedSet<Point>(new PointCompare());
             ColorBox.BackColor = CurrentColor;
             border = new List<List<Point>>();
             BorderPen = new Pen(Color.Black, 2);
@@ -162,6 +164,7 @@ namespace CG_task3
                     full_border.Clear();
                     border.Clear();
                     colored_lines.Clear();
+                    inner_border.Clear();
                     int x;
                     Point start = e.Location;
                     x = start.X;
@@ -203,18 +206,24 @@ namespace CG_task3
             while (p1.X < p2.X)
             {
 
-                if (full_border.Contains(p1)) { // натыкаемся на результат обведения  произведенного выше
-                    var i = full_border.SkipWhile(p => p != p1).GetEnumerator(); // получаем итератор на резульатт
-                     
-                    if (i.MoveNext()  && i.Current.Y == p1.Y) // если есть след точка и эта точка на линии
-                        p1 = i.Current;  // берем ее
+                if (inner_border.Contains(p1)) { // натыкаемся на результат обведения  произведенного выше
+                    var ls = inner_border.Where(p => p.Y == Start.Y).Select((Point p) => p.X).ToList();
+                    int i = 0;
+                    while (p1.X != ls[i]) { i++; }
+
+                    while (i != ls.Count - 1) {
+
+                    }
                     
-                 }
+                    
+                    
+                }
                 else if (!equal_color(DrawArea.GetPixel(p1.X, p1.Y), c)) // если найденная новая граница
                 {
-                    magic_border(p1, Start, c, out int x); // обводим ее
-                    p1.X = x;  // получаем крайнюю точку 
-                    p1.X++;
+                    DrawArea.SetPixel(p1.X, p1.Y, Color.Red);
+                    //magic_border(p1, Start, c, out int x,true); // обводим ее
+                    //p1.X = x;  // получаем крайнюю точку 
+
                 }
                 
                 p1.X++;
@@ -440,14 +449,14 @@ namespace CG_task3
             return (System.Math.Abs(cl1.R - cl2.R) < diff_img && System.Math.Abs(cl1.G - cl2.G) < diff_img && System.Math.Abs(cl1.B - cl2.B) < diff_img);
         }
 
-        private bool magic_border(Point start, Point beam_start, Color clr_img, out int rightmost)
+        private bool magic_border(Point start, Point beam_start, Color clr_img, out int rightmost, bool inner = false)
         {
             
 
             List<Point> local_border = new List<Point>();
             int count_intersections = 0;
             List<int> intersct = new List< int>();
-            Point LeftmostBeam = new Point(start.X, start.Y);
+             Point LeftmostBeam = new Point(start.X, start.Y);
             Point RightMostBeam = new Point(start.X, start.Y);
             Point curr_p = new Point(start.X, start.Y);
             int dir = 6;
@@ -468,7 +477,6 @@ namespace CG_task3
                         dir = 0;
                 }
 
-                full_border.Add(curr_p);
                 local_border.Add(curr_p);
                 
 
@@ -492,26 +500,36 @@ namespace CG_task3
                     break;
             } while (curr_p != start);
 
-            intersct.Sort();
-            int old_x = int.MinValue;
-            foreach(var x in intersct) {
-                if (old_x + 1 != x)
-                    count_intersections++;
-                 old_x = x;       
-        
+
+            if (!inner)
+            {
+                intersct.Sort();
+                int old_x = int.MinValue;
+                foreach (var x in intersct)
+                {
+                    if (old_x + 1 != x)
+                        count_intersections++;
+                    old_x = x;
+
+                }
             }
 
 
             border.Add(local_border);
             BorderPictureBox.Invalidate();
             rightmost = RightMostBeam.X;
-            if (RightMostBeam == LeftmostBeam)
+            if (inner || RightMostBeam == LeftmostBeam || count_intersections % 2 == 0)
+            {
+                foreach (var p in local_border)
+                    inner_border.Add(p);
                 return false;
-            if (count_intersections % 2 == 0)
-                return false;
+            }
             else
+            {
+                foreach (var p in local_border)
+                    full_border.Add(p);
                 return true;
-            
+            }
         }
 
 
