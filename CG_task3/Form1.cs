@@ -209,14 +209,33 @@ namespace CG_task3
                 if (inner_border.Contains(p1)) { // натыкаемся на результат обведения  произведенного выше
                     var ls = inner_border.Where(p => p.Y == Start.Y).Select((Point p) => p.X).ToList();
                     int i = 0;
+                    // skipp to p1 location
                     while (p1.X != ls[i]) { i++; }
 
-                    while (i != ls.Count - 1) {
-
+                    // i is at p1 location
+                    while (i < ls.Count - 1) {
+                        if (ls[i] + 1 == ls[i + 1])
+                            i++;
+                        else
+                            break;
                     }
-                    
-                    
-                    
+                    // skipped to last before jump
+
+                    if (i < ls.Count - 1) //jump
+                        i++;
+
+                    // skipped to last inm row
+                    while (i < ls.Count - 1)
+                    {
+                        if (ls[i] + 1 == ls[i + 1])
+                            i++;
+                        else
+                            break;
+                    }
+
+                    p1.X = ls[i];
+
+
                 }
                 else if (!equal_color(DrawArea.GetPixel(p1.X, p1.Y), c)) // если найденная новая граница
                 {
