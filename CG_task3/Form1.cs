@@ -184,6 +184,7 @@ namespace CG_task3
                     int top = full_border.Last().Y;
                     for (int y = full_border.First().Y; y != top; y++) {
                         List<Point> ps = full_border.Where((Point p) => { return (p.Y == y) && is_not_hill(p); }).ToList();
+                        colored_lines.Add(Start.Y, new List<Tuple<int, int>>());
                         for (int i = 0; i < ps.Count - 1; i++) {
                             ScanLine(ps[i], ps[i + 1], c);
                         }
@@ -203,10 +204,18 @@ namespace CG_task3
         {
             Point Start = new Point(p1.X, p1.Y); 
             p1.X += 1;
+            
+            
+
+            Point start_c = Start;
             while (p1.X < p2.X)
             {
-
+                
                 if (inner_border.Contains(p1)) { // натыкаемся на результат обведения  произведенного выше
+
+                    colored_lines[Start.Y].Add(new Tuple<int, int>(start_c.X,p1.X-1)); // as we are bout to jump, stash for coloring all that before 
+
+
                     var ls = inner_border.Where(p => p.Y == Start.Y).Select((Point p) => p.X).ToList();
                     int i = 0;
                     // skipp to p1 location
@@ -235,13 +244,13 @@ namespace CG_task3
 
                     p1.X = ls[i];
 
-
+                    start_c = new Point(p1.X + 1, p1.Y);
                 }
                 else if (!equal_color(DrawArea.GetPixel(p1.X, p1.Y), c)) // если найденная новая граница
                 {
-                    DrawArea.SetPixel(p1.X, p1.Y, Color.Red);
-                    //magic_border(p1, Start, c, out int x,true); // обводим ее
-                    //p1.X = x;  // получаем крайнюю точку 
+                   // DrawArea.SetPixel(p1.X, p1.Y, Color.Red);
+                    magic_border(p1, Start, c, out int x,true); // обводим ее
+                    p1.X = x;  // получаем крайнюю точку 
 
                 }
                 
@@ -249,6 +258,7 @@ namespace CG_task3
 
 
             }
+            colored_lines[Start.Y].Add(new Tuple<int, int>(start_c.X, p1.X - 1));
 
         }
 
