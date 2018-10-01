@@ -14,7 +14,7 @@ namespace CG_task3
     {
         private enum Tools { None, BorderMaker, MagicWand, Fill, Marker, ImageFill}
         private Tools CurrentTool = Tools.None;
-        private Color CurrentColor = Color.White;
+        private Color CurrentColor = Color.Gold;
         private Graphics g;
         private Graphics borderboxGraphics;
         private List<List<Point>> border;
