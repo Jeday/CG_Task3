@@ -17,7 +17,7 @@ namespace CG_task3
         private Color CurrentColor = Color.White;
         private Graphics g;
         private Graphics borderboxGraphics;
-        private List<Point> border;
+        private List<List<Point>> border;
         private bool BorderIsDrawn = false;
         private Pen BorderPen;
         private List<Point> full_border;
@@ -34,7 +34,7 @@ namespace CG_task3
             colored_lines =new Dictionary<int, List<Tuple<int, int>>>(); //  Y : (X1,X2) (X3,X4) это две горизонтальные линии
             full_border = new List<Point>();
             ColorBox.BackColor = CurrentColor;
-            border = new List<Point>();
+            border = new List<List<Point>>();
             BorderPen = new Pen(Color.Black, 2);
             float[] dashValues = {1,1};
             BorderPen.DashPattern = dashValues;
@@ -129,16 +129,18 @@ namespace CG_task3
                 {
                     border.Clear();
                     BorderIsDrawn = true;
-                    border.Add(e.Location);
+                    border.Add(new List<Point>());
+                    border.Last().Add(e.Location);
                     BorderPictureBox.Invalidate();
                 }
 
-                else if (CurrentTool == Tools.Fill) {
+                else if (CurrentTool == Tools.Fill)
+                {
                     colored_lines.Clear();
-                   //if (full_border.Count()>0)
-                        rec_fill(e.Location);
+                    //if (full_border.Count()>0)
+                    rec_fill(e.Location);
                 }
-                else if(CurrentTool == Tools.ImageFill)
+                else if (CurrentTool == Tools.ImageFill)
                 {
                     colored_lines.Clear();
                     openFileDialog2.ShowDialog();
@@ -148,8 +150,26 @@ namespace CG_task3
                     //if (full_border.Count > 0)
                     fill_image(e.Location, new Point(0, 0));
                 }
-                else if (CurrentTool == Tools.MagicWand)
-                    magic_border(e.Location);
+                else if (CurrentTool == Tools.MagicWand) {
+
+                    full_border.Clear();
+                    border.Clear();
+                    int x;
+                    Point start = e.Location;
+                    x = start.X;
+                    Color c = DrawArea.GetPixel(x, start.Y);
+                    while (x < DrawArea.Width) {
+                        Color _c = DrawArea.GetPixel(x, start.Y);
+                        if (_c != c && magic_border(new Point(x, start.Y), start, c, out x))
+                            break;
+                        else
+                            x++;
+                    }
+
+                    BorderPictureBox.Invalidate();
+
+                }
+                    
             }
         }
 
@@ -157,8 +177,8 @@ namespace CG_task3
         {
             if (e.Button == MouseButtons.Left) {
                 if (CurrentTool == Tools.BorderMaker) {
-                    if (BorderIsDrawn && !border.Contains(e.Location))
-                        border.Add(e.Location);
+                    if (BorderIsDrawn && !border.First().Contains(e.Location))
+                        border.First().Add(e.Location);
                     BorderPictureBox.Invalidate();
                 }
             }
@@ -171,14 +191,14 @@ namespace CG_task3
                 BorderIsDrawn = false;
                 BorderPictureBox.Invalidate();
 
-                if (border.Count == 0)
+                if (border.First().Count == 0)
                     return;
                 full_border.Clear();
                 full_border = new List<Point>(); // all pixels of border
-                border.Add(border.First());  // make border circullar
-                for (int i = 0; i < border.Count() - 1; i++)
+                border.First().Add(border.First().First());  // make border circullar
+                for (int i = 0; i < border.First().Count() - 1; i++)
                 {
-                    bresenham(border[i].X, border[i].Y, border[i + 1].X, border[i + 1].Y, ref full_border);//calculate all points of border 1->2, 2 ->3 .. n->1
+                    bresenham(border.First()[i].X, border.First()[i].Y, border.First()[i + 1].X, border.First()[i + 1].Y, ref full_border);//calculate all points of border 1->2, 2 ->3 .. n->1
                     full_border.RemoveAt(full_border.Count() - 1); // remove duplicate
 
                 }
@@ -188,11 +208,12 @@ namespace CG_task3
         private void BorderPictureBox_Paint(object sender, PaintEventArgs e)
         {
             borderboxGraphics = e.Graphics;
-            if (border.Count > 3)
+            foreach (List<Point> b in border)
+            if (b.Count > 3)
             {
-                borderboxGraphics.DrawLines(BorderPen, border.ToArray());
+                borderboxGraphics.DrawLines(BorderPen, b.ToArray());
                 if (!BorderIsDrawn)
-                    borderboxGraphics.DrawLine(BorderPen, border.Last(), border.First());
+                    borderboxGraphics.DrawLine(BorderPen, b.Last(), b.First());
                 
                 
             }
@@ -340,64 +361,65 @@ namespace CG_task3
             }
         }
 
-        private void magic_border(Point start)
+        private bool magic_border(Point start, Point beam_start, Color clr_img, out int rightmost)
         {
-            border.Clear();
-            full_border.Clear();
+            
 
-            Color clr_img = DrawArea.GetPixel(start.X, start.Y);
-            Color clr_border = clr_img;
+            List<Point> local_border = new List<Point>();
+            int count_intersections = 0;
 
-
-            while (clr_img == clr_border && start.X < DrawArea.Width-1) {
-                start.X += 1;
-                clr_border = DrawArea.GetPixel(start.X, start.Y);
-            }
-
-            Point start_border = new Point(start.X, start.Y);
-
-            start.Y -= 1;
-            Point prev_cur = new Point(start.X, start.Y);
-            Point cur = prev_cur;
-            int prev_dir = 8;
+            Point LeftmostBeam = new Point(start.X, start.Y);
+            Point RightMostBeam = new Point(start.X, start.Y);
+            Point curr_p = new Point(start.X, start.Y);
             int dir = 6;
-
-            while(DrawArea.GetPixel(cur.X, cur.Y) != clr_border){
-                if (dir + 1 > 7)
-                    dir = 0;
-                else
-                    dir += 1;
-                cur = next_point(dir, prev_cur);
-            }
-            border.Add(cur);
-            prev_cur = cur;
-            prev_dir = dir;
-
-            while (cur != start_border)
+            Point view_p = new Point();
+            do
             {
-                if (dir - 2 < 0)
-                    dir = 6;
-                else
-                    dir -= 2;
-                cur = next_point(dir, prev_cur);
-
-                while(DrawArea.GetPixel(cur.X, cur.Y) != clr_border)
+                int old = dir;
+                int i;
+                for (i = 0; i<8; ++i)
                 {
-                    if (dir + 1 > 7)
+                    view_p = next_point(dir, curr_p);
+                    if (view_p.X < 0 || view_p.X >= DrawArea.Width || view_p.Y < 0 || view_p.Y >= DrawArea.Height)
+                        break;
+                    else if (DrawArea.GetPixel(view_p.X, view_p.Y) != clr_img)
+                        break;
+                    dir += 1;
+                    if (dir > 7)
                         dir = 0;
-                    else
-                        dir += 1;
-                    cur = next_point(dir, prev_cur);
                 }
 
-                border.Add(cur);
-                prev_cur = cur;
-                prev_dir = dir;
-            }
+                full_border.Add(curr_p);
+                local_border.Add(curr_p);
+                curr_p = view_p;
 
-            full_border = new List<Point>(border);
+                if (curr_p.Y == beam_start.Y) {
+                    if (curr_p.X > RightMostBeam.X)
+                        RightMostBeam = curr_p;
+                    if (curr_p.X < LeftmostBeam.X)
+                        LeftmostBeam = curr_p;
+                    if (curr_p.X > beam_start.X)
+                        count_intersections++;
+                }
 
-            BorderPictureBox.Invalidate();
+                if (dir - 2 < 0)
+                    dir += 8;
+                dir -= 2;
+
+                if (i == 8) // single point
+                    break;
+            } while (curr_p != start);
+
+            border.Add(local_border);
+
+            rightmost = RightMostBeam.X;
+            if (RightMostBeam == LeftmostBeam)
+                return false;
+            if (count_intersections % 2 == 0)
+                return false;
+            else
+                return true;
+            
         }
 
 

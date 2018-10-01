@@ -29,6 +29,11 @@
         private void InitializeComponent()
         {
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.LoadButton = new System.Windows.Forms.Button();
             this.SaveButton = new System.Windows.Forms.Button();
@@ -37,11 +42,6 @@
             this.BorderPictureBox = new System.Windows.Forms.PictureBox();
             this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
             this.ColorBox = new System.Windows.Forms.PictureBox();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.BorderPictureBox)).BeginInit();
@@ -62,6 +62,56 @@
             this.toolStrip1.Size = new System.Drawing.Size(624, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.CheckOnClick = true;
+            this.toolStripButton1.Image = global::CG_task3.Properties.Resources.lassoicon;
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(62, 22);
+            this.toolStripButton1.Text = "Border";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton_Click);
+            // 
+            // toolStripButton2
+            // 
+            this.toolStripButton2.CheckOnClick = true;
+            this.toolStripButton2.Image = global::CG_task3.Properties.Resources.bucketicon;
+            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.Size = new System.Drawing.Size(42, 22);
+            this.toolStripButton2.Text = "Fill";
+            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton_Click);
+            // 
+            // toolStripButton3
+            // 
+            this.toolStripButton3.CheckOnClick = true;
+            this.toolStripButton3.Image = global::CG_task3.Properties.Resources.WandIcon;
+            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton3.Name = "toolStripButton3";
+            this.toolStripButton3.Size = new System.Drawing.Size(94, 22);
+            this.toolStripButton3.Text = "Magic Wand";
+            this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton_Click);
+            // 
+            // toolStripButton4
+            // 
+            this.toolStripButton4.CheckOnClick = true;
+            this.toolStripButton4.Image = global::CG_task3.Properties.Resources.MarkerIcon;
+            this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton4.Name = "toolStripButton4";
+            this.toolStripButton4.Size = new System.Drawing.Size(64, 22);
+            this.toolStripButton4.Text = "Marker";
+            this.toolStripButton4.Click += new System.EventHandler(this.toolStripButton_Click);
+            // 
+            // toolStripButton5
+            // 
+            this.toolStripButton5.CheckOnClick = true;
+            this.toolStripButton5.Image = global::CG_task3.Properties.Resources.ImageFillIcon;
+            this.toolStripButton5.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton5.Name = "toolStripButton5";
+            this.toolStripButton5.Size = new System.Drawing.Size(78, 22);
+            this.toolStripButton5.Text = "Image Fill";
+            this.toolStripButton5.Click += new System.EventHandler(this.toolStripButton_Click);
             // 
             // LoadButton
             // 
@@ -122,56 +172,6 @@
             this.ColorBox.TabIndex = 5;
             this.ColorBox.TabStop = false;
             this.ColorBox.Click += new System.EventHandler(this.ColorButton_Click);
-            // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.CheckOnClick = true;
-            this.toolStripButton1.Image = global::CG_task3.Properties.Resources.lassoicon;
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(62, 22);
-            this.toolStripButton1.Text = "Border";
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton_Click);
-            // 
-            // toolStripButton2
-            // 
-            this.toolStripButton2.CheckOnClick = true;
-            this.toolStripButton2.Image = global::CG_task3.Properties.Resources.bucketicon;
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(42, 22);
-            this.toolStripButton2.Text = "Fill";
-            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton_Click);
-            // 
-            // toolStripButton3
-            // 
-            this.toolStripButton3.CheckOnClick = true;
-            this.toolStripButton3.Image = global::CG_task3.Properties.Resources.WandIcon;
-            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(94, 22);
-            this.toolStripButton3.Text = "Magic Wand";
-            this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton_Click);
-            // 
-            // toolStripButton4
-            // 
-            this.toolStripButton4.CheckOnClick = true;
-            this.toolStripButton4.Image = global::CG_task3.Properties.Resources.MarkerIcon;
-            this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton4.Name = "toolStripButton4";
-            this.toolStripButton4.Size = new System.Drawing.Size(64, 22);
-            this.toolStripButton4.Text = "Marker";
-            this.toolStripButton4.Click += new System.EventHandler(this.toolStripButton_Click);
-            // 
-            // toolStripButton5
-            // 
-            this.toolStripButton5.CheckOnClick = true;
-            this.toolStripButton5.Image = global::CG_task3.Properties.Resources.ImageFillIcon;
-            this.toolStripButton5.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton5.Name = "toolStripButton5";
-            this.toolStripButton5.Size = new System.Drawing.Size(78, 22);
-            this.toolStripButton5.Text = "Image Fill";
-            this.toolStripButton5.Click += new System.EventHandler(this.toolStripButton_Click);
             // 
             // pictureBox1
             // 
