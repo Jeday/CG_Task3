@@ -26,6 +26,9 @@ namespace CG_task3
         private Dictionary<int, List<Tuple<int, int>>> colored_lines;
         private Bitmap DrawArea;
         private Bitmap ImageFill;
+        private int diff_img;
+        private Point p_marker;
+        private int width_marker;
 
         static  private void Swap<T>(ref T v1, ref T v2) { T v3 = v1; v1 = v2; v2 = v3; }
 
@@ -41,6 +44,8 @@ namespace CG_task3
             float[] dashValues = {1,1};
             BorderPen.DashPattern = dashValues;
             DrawArea = new Bitmap(pictureBox1.Size.Width, pictureBox1.Size.Height);
+            diff_img = 50;
+            width_marker = 3;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -163,18 +168,18 @@ namespace CG_task3
                     while (x < DrawArea.Width)
                     {
                         Color _c = DrawArea.GetPixel(x, start.Y);
-                        if (_c != c)
-                        {
-                            if (magic_border(new Point(x, start.Y), start, c, out x))
-                                break;
+
+                        if (!equal_color(_c,c) && magic_border(new Point(x, start.Y), start, c, out x))
+                            break;
+                        else
                             x++;
-                        }
-                        else x++;
                     }      
 
                     BorderPictureBox.Invalidate();
 
                 }
+                else if (CurrentTool == Tools.Marker)
+                    p_marker = e.Location;
                     
             }
         }
@@ -186,6 +191,11 @@ namespace CG_task3
                     if (BorderIsDrawn && !border.First().Contains(e.Location))
                         border.First().Add(e.Location);
                     BorderPictureBox.Invalidate();
+                }
+                else if(CurrentTool == Tools.Marker)
+                {
+                    g.DrawLine(new Pen(CurrentColor, width_marker), p_marker, e.Location);
+                    p_marker = e.Location;
                 }
             }
         }
@@ -209,6 +219,8 @@ namespace CG_task3
 
                 }
             }
+            else if(CurrentTool == Tools.Marker)
+                g.DrawLine(new Pen(CurrentColor, width_marker), p_marker, e.Location);
         }
 
         private void BorderPictureBox_Paint(object sender, PaintEventArgs e)
@@ -367,13 +379,18 @@ namespace CG_task3
             }
         }
 
+        bool equal_color(Color cl1, Color cl2)
+        {
+            return (System.Math.Abs(cl1.R - cl2.R) < diff_img && System.Math.Abs(cl1.G - cl2.G) < diff_img && System.Math.Abs(cl1.B - cl2.B) < diff_img);
+        }
+
         private bool magic_border(Point start, Point beam_start, Color clr_img, out int rightmost)
         {
             
 
             List<Point> local_border = new List<Point>();
             int count_intersections = 0;
-
+            List<int> intersct = new List< int>();
             Point LeftmostBeam = new Point(start.X, start.Y);
             Point RightMostBeam = new Point(start.X, start.Y);
             Point curr_p = new Point(start.X, start.Y);
@@ -388,7 +405,7 @@ namespace CG_task3
                     view_p = next_point(dir, curr_p);
                     if (view_p.X < 0 || view_p.X >= DrawArea.Width || view_p.Y < 0 || view_p.Y >= DrawArea.Height)
                         break;
-                    else if (DrawArea.GetPixel(view_p.X, view_p.Y) != clr_img)
+                    else if (!equal_color(DrawArea.GetPixel(view_p.X, view_p.Y), clr_img))
                         break;
                     dir += 1;
                     if (dir > 7)
@@ -405,7 +422,9 @@ namespace CG_task3
                     if (curr_p.X < LeftmostBeam.X)
                         LeftmostBeam = curr_p;
                     if (curr_p.X > beam_start.X)
-                        count_intersections++;
+                    {
+                        intersct.Add(curr_p.X);
+                    }
                 }
                 curr_p = view_p;
 
@@ -417,8 +436,17 @@ namespace CG_task3
                     break;
             } while (curr_p != start);
 
-            border.Add(local_border);
+            intersct.Sort();
+            int old_x = int.MinValue;
+            foreach(var x in intersct) {
+                if (old_x + 1 != x)
+                    count_intersections++;
+                 old_x = x;       
+        
+            }
 
+
+            border.Add(local_border);
             rightmost = RightMostBeam.X;
             if (RightMostBeam == LeftmostBeam)
                 return false;
