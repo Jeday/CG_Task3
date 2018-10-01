@@ -24,6 +24,7 @@ namespace CG_task3
         private Dictionary<int, List<Tuple<int, int>>> colored_lines;
         private Bitmap DrawArea;
         private Bitmap ImageFill;
+        private int diff_img;
 
         static  private void Swap<T>(ref T v1, ref T v2) { T v3 = v1; v1 = v2; v2 = v3; }
 
@@ -39,6 +40,7 @@ namespace CG_task3
             float[] dashValues = {1,1};
             BorderPen.DashPattern = dashValues;
             DrawArea = new Bitmap(pictureBox1.Size.Width, pictureBox1.Size.Height);
+            diff_img = 50;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -363,7 +365,7 @@ namespace CG_task3
 
         bool equal_color(Color cl1, Color cl2)
         {
-            return (System.Math.Abs(cl1.R - cl2.R) < 50 && System.Math.Abs(cl1.G - cl2.G) < 50 && System.Math.Abs(cl1.B - cl2.B) < 50);
+            return (System.Math.Abs(cl1.R - cl2.R) < diff_img && System.Math.Abs(cl1.G - cl2.G) < diff_img && System.Math.Abs(cl1.B - cl2.B) < diff_img);
         }
 
         private bool magic_border(Point start, Point beam_start, Color clr_img, out int rightmost)
