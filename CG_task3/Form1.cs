@@ -25,6 +25,8 @@ namespace CG_task3
         private Bitmap DrawArea;
         private Bitmap ImageFill;
         private int diff_img;
+        private Point p_marker;
+        private int width_marker;
 
         static  private void Swap<T>(ref T v1, ref T v2) { T v3 = v1; v1 = v2; v2 = v3; }
 
@@ -41,6 +43,7 @@ namespace CG_task3
             BorderPen.DashPattern = dashValues;
             DrawArea = new Bitmap(pictureBox1.Size.Width, pictureBox1.Size.Height);
             diff_img = 50;
+            width_marker = 3;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -171,6 +174,8 @@ namespace CG_task3
                     BorderPictureBox.Invalidate();
 
                 }
+                else if (CurrentTool == Tools.Marker)
+                    p_marker = e.Location;
                     
             }
         }
@@ -182,6 +187,11 @@ namespace CG_task3
                     if (BorderIsDrawn && !border.First().Contains(e.Location))
                         border.First().Add(e.Location);
                     BorderPictureBox.Invalidate();
+                }
+                else if(CurrentTool == Tools.Marker)
+                {
+                    g.DrawLine(new Pen(CurrentColor, width_marker), p_marker, e.Location);
+                    p_marker = e.Location;
                 }
             }
         }
@@ -205,6 +215,8 @@ namespace CG_task3
 
                 }
             }
+            else if(CurrentTool == Tools.Marker)
+                g.DrawLine(new Pen(CurrentColor, width_marker), p_marker, e.Location);
         }
 
         private void BorderPictureBox_Paint(object sender, PaintEventArgs e)
