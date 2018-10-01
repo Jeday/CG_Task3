@@ -261,9 +261,9 @@ namespace CG_task3
                 }
                 else if (!equal_color(DrawArea.GetPixel(p1.X, p1.Y), c)) // если найденная новая граница
                 {
-                    DrawArea.SetPixel(p1.X, p1.Y, Color.Red);
-                   // magic_border(p1, Start, c, out int x,true); // обводим ее
-                   // p1.X = x;  // получаем крайнюю точку 
+                   // DrawArea.SetPixel(p1.X, p1.Y, Color.Red);
+                    magic_border(p1, Start, c, out int x,true); // обводим ее
+                    p1.X = x;  // получаем крайнюю точку 
 
                 }
                 
