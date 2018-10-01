@@ -160,7 +160,7 @@ namespace CG_task3
                     Color c = DrawArea.GetPixel(x, start.Y);
                     while (x < DrawArea.Width) {
                         Color _c = DrawArea.GetPixel(x, start.Y);
-                        if (_c != c && magic_border(new Point(x, start.Y), start, c, out x))
+                        if (!equal_color(_c,c) && magic_border(new Point(x, start.Y), start, c, out x))
                             break;
                         else
                             x++;
@@ -361,6 +361,11 @@ namespace CG_task3
             }
         }
 
+        bool equal_color(Color cl1, Color cl2)
+        {
+            return (System.Math.Abs(cl1.R - cl2.R) < 50 && System.Math.Abs(cl1.G - cl2.G) < 50 && System.Math.Abs(cl1.B - cl2.B) < 50);
+        }
+
         private bool magic_border(Point start, Point beam_start, Color clr_img, out int rightmost)
         {
             
@@ -382,7 +387,7 @@ namespace CG_task3
                     view_p = next_point(dir, curr_p);
                     if (view_p.X < 0 || view_p.X >= DrawArea.Width || view_p.Y < 0 || view_p.Y >= DrawArea.Height)
                         break;
-                    else if (DrawArea.GetPixel(view_p.X, view_p.Y) != clr_img)
+                    else if (!equal_color(DrawArea.GetPixel(view_p.X, view_p.Y), clr_img))
                         break;
                     dir += 1;
                     if (dir > 7)
