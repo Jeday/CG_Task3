@@ -161,6 +161,7 @@ namespace CG_task3
 
                     full_border.Clear();
                     border.Clear();
+                    colored_lines.Clear();
                     int x;
                     Point start = e.Location;
                     x = start.X;
@@ -173,7 +174,18 @@ namespace CG_task3
                             break;
                         else
                             x++;
-                    }      
+                    }
+
+                   
+
+                    int top = full_border.Last().Y;
+                    for (int y = full_border.First().Y; y != top; y++) {
+                        List<Point> ps = full_border.Where((Point p) => { return (p.Y == y) && is_not_hill(p); }).ToList();
+                        for (int i = 0; i < ps.Count - 1; i++) {
+                            ScanLine(ps[i], ps[i + 1], c);
+                        }
+                    }
+
 
                     BorderPictureBox.Invalidate();
 
@@ -182,6 +194,50 @@ namespace CG_task3
                     p_marker = e.Location;
                     
             }
+        }
+
+        private void ScanLine(Point p1, Point p2, Color c)
+        {
+            Point Start = new Point(p1.X, p1.Y); 
+            p1.X += 1;
+            while (p1.X < p2.X)
+            {
+
+                if (full_border.Contains(p1)) { // натыкаемся на результат обведения  произведенного выше
+                    var i = full_border.SkipWhile(p => p != p1).GetEnumerator(); // получаем итератор на резульатт
+                     
+                    if (i.MoveNext()  && i.Current.Y == p1.Y) // если есть след точка и эта точка на линии
+                        p1 = i.Current;  // берем ее
+                    
+                 }
+                else if (!equal_color(DrawArea.GetPixel(p1.X, p1.Y), c)) // если найденная новая граница
+                {
+                    magic_border(p1, Start, c, out int x); // обводим ее
+                    p1.X = x;  // получаем крайнюю точку 
+                    p1.X++;
+                }
+                
+                p1.X++;
+
+
+            }
+
+        }
+
+        private bool is_not_hill(Point p) {
+            if (!full_border.Contains(new Point(p.X - 1, p.Y)) &&
+                !full_border.Contains(new Point(p.X - 1, p.Y + 1)) &&
+                !full_border.Contains(new Point(p.X, p.Y + 1)) &&
+                !full_border.Contains(new Point(p.X + 1, p.Y + 1)) &&
+                !full_border.Contains(new Point(p.X + 1, p.Y))
+                ) return false;
+            if (!full_border.Contains(new Point(p.X - 1, p.Y)) &&
+                !full_border.Contains(new Point(p.X - 1, p.Y - 1)) &&
+                !full_border.Contains(new Point(p.X, p.Y - 1)) &&
+                !full_border.Contains(new Point(p.X - 1, p.Y - 1)) &&
+                !full_border.Contains(new Point(p.X + 1, p.Y))
+                ) return false;
+            return true;
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
@@ -447,6 +503,7 @@ namespace CG_task3
 
 
             border.Add(local_border);
+            BorderPictureBox.Invalidate();
             rightmost = RightMostBeam.X;
             if (RightMostBeam == LeftmostBeam)
                 return false;
