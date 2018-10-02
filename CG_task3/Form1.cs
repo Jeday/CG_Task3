@@ -152,8 +152,7 @@ namespace CG_task3
                 else if (CurrentTool == Tools.ImageFill)
                 {
                     colored_lines.Clear();
-                    openFileDialog2.ShowDialog();
-                    if (openFileDialog2.FileName == "")
+                    if(openFileDialog2.ShowDialog() != DialogResult.OK)
                         return;
                     ImageFill = Image.FromFile(openFileDialog2.FileName) as Bitmap;
                     
@@ -180,7 +179,7 @@ namespace CG_task3
                     }
 
 
-                    if (full_border.Count == 0)
+                   /* if (full_border.Count == 0)
                     {
                         for (int y = 0; y != DrawArea.Height; y++)
                         {
@@ -201,7 +200,7 @@ namespace CG_task3
                             }
                         }
 
-                    }
+                    }*/
 
                     BorderPictureBox.Invalidate();
 
@@ -257,9 +256,9 @@ namespace CG_task3
                 }
                 else if (!equal_color(DrawArea.GetPixel(p1.X, p1.Y), c)) // если найденная новая граница
                 {
-                    DrawArea.SetPixel(p1.X, p1.Y, Color.Red);
-                    //magic_border(p1, Start, c, out int x,true); // обводим ее
-                    //p1.X = x;  // получаем крайнюю точку 
+                    //DrawArea.SetPixel(p1.X, p1.Y, Color.Red);
+                    magic_border(p1, Start, c, out int x,true); // обводим ее
+                    p1.X = x;  // получаем крайнюю точку 
 
                 }
                 
@@ -422,38 +421,56 @@ namespace CG_task3
             }
         }
 
+        private void repair_point(ref Point p,int w,int h) {
+            if (p.X < 0)
+                p.X = w - 1;
+            else if (p.X >= w)
+                p.X = 0;
+
+            if (p.Y < 0)
+                p.Y = h - 1;
+            else if (p.Y >=h)
+                p.Y = 0;
+        }
+
         private void fill_image(Point p, Point loaded_p) {
-            if (!full_border.Contains(p) && !is_colored(p) && p.X >= 0 && p.X < pictureBox1.Width && p.Y >= 0 && p.Y < pictureBox1.Height)
+            if (!full_border.Contains(p) && !inner_border.Contains(p) && !is_colored(p) && p.X >= 0 && p.X < pictureBox1.Width && p.Y >= 0 && p.Y < pictureBox1.Height)
             {
-                if (loaded_p.Y >= ImageFill.Height)
-                    loaded_p.Y = 0;
-                if (loaded_p.Y <0)
-                    loaded_p.Y = ImageFill.Height-1;
+                repair_point(ref loaded_p, ImageFill.Width, ImageFill.Height);
                 Point Start = new Point(p.X - 1, p.Y);
                 Point Finish = new Point(p.X + 1, p.Y);
-                while (!full_border.Contains(Start) && Start.X >= 0)
+                Point Fill_start = new Point(loaded_p.X-1,loaded_p.Y);
+                repair_point(ref Fill_start, ImageFill.Width, ImageFill.Height);
+                while (!inner_border.Contains(Start) && !full_border.Contains(Start) && Start.X >= 0)
+                {
                     Start.X -= 1;
+                    Fill_start.X -= 1;
+                    repair_point(ref Fill_start, ImageFill.Width, ImageFill.Height);
+                }
                 Start.X += 1;
-                while (!full_border.Contains(Finish) && Finish.X < pictureBox1.Width)
+                Fill_start.X += 1;
+                repair_point(ref Fill_start, ImageFill.Width, ImageFill.Height);
+
+                while (!inner_border.Contains(Finish) && !full_border.Contains(Finish) && Finish.X < pictureBox1.Width)
                     Finish.X += 1;
                 Finish.X -= 1;
                 if (colored_lines.ContainsKey(p.Y))
                     colored_lines[p.Y].Add(new Tuple<int, int>(Start.X, Finish.X));
                 else
                     colored_lines.Add(p.Y, new List<Tuple<int, int>> { new Tuple<int, int>(Start.X, Finish.X) });
-                Point from_start = new Point(Math.Abs(loaded_p.X - ((p.X - Start.X) % ImageFill.Width)), loaded_p.Y);
-                CopyPixels(Start, Finish, from_start);
+
+
+                CopyPixels(Start, Finish, Fill_start);
                 pictureBox1.Refresh();
                 for (int i = Start.X; i <= Finish.X; ++i)
                 {
-                    if (from_start.X == ImageFill.Width)
-                        from_start.X = 0;
-                    from_start.Y += 1;
-                    fill_image(new Point(i, p.Y + 1), from_start);
-                    from_start.Y -= 2;
-                    fill_image(new Point(i, p.Y - 1), from_start);
-                    from_start.Y += 1;
-                    from_start.X += 1;
+                    repair_point(ref Fill_start, ImageFill.Width, ImageFill.Height);
+                    Fill_start.Y += 1;
+                    fill_image(new Point(i, p.Y + 1), Fill_start);
+                    Fill_start.Y -= 2;
+                    fill_image(new Point(i, p.Y - 1), Fill_start);
+                    Fill_start.Y += 1;
+                    Fill_start.X += 1;
                 }
 
             }
