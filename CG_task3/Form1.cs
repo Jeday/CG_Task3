@@ -179,16 +179,29 @@ namespace CG_task3
                             x++;
                     }
 
-                   
 
-                    int top = full_border.Last().Y;
-                    for (int y = full_border.First().Y; y != top; y++) {
-                        List<Point> ps = full_border.Where((Point p) => { return (p.Y == y) && is_not_hill(p); }).ToList();
-                        for (int i = 0; i < ps.Count - 1; i++) {
-                            ScanLine(ps[i], ps[i + 1], c);
+                    if (full_border.Count == 0)
+                    {
+                        for (int y = 0; y != DrawArea.Height; y++)
+                        {
+                            
+                                ScanLine(new Point(-1,y), new Point(-1, DrawArea.Width), c);
+                            
                         }
                     }
+                    else
+                    {
+                        int top = full_border.Last().Y;
+                        for (int y = full_border.First().Y; y != top; y++)
+                        {
+                            List<Point> ps = full_border.Where((Point p) => { return (p.Y == y) && is_not_hill(p); }).ToList();
+                            for (int i = 0; i < ps.Count - 1; i++)
+                            {
+                                ScanLine(ps[i], ps[i + 1], c);
+                            }
+                        }
 
+                    }
 
                     BorderPictureBox.Invalidate();
 
@@ -206,14 +219,16 @@ namespace CG_task3
             while (p1.X < p2.X)
             {
 
-                if (inner_border.Contains(p1)) { // натыкаемся на результат обведения  произведенного выше
+                if (inner_border.Contains(p1))
+                { // натыкаемся на результат обведения  произведенного выше
                     var ls = inner_border.Where(p => p.Y == Start.Y).Select((Point p) => p.X).ToList();
                     int i = 0;
                     // skipp to p1 location
                     while (p1.X != ls[i]) { i++; }
 
                     // i is at p1 location
-                    while (i < ls.Count - 1) {
+                    while (i < ls.Count - 1)
+                    {
                         if (ls[i] + 1 == ls[i + 1])
                             i++;
                         else
@@ -236,6 +251,9 @@ namespace CG_task3
                     p1.X = ls[i];
 
 
+                }
+                else if (full_border.Contains(p1)) {
+                    
                 }
                 else if (!equal_color(DrawArea.GetPixel(p1.X, p1.Y), c)) // если найденная новая граница
                 {
