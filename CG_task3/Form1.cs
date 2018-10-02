@@ -389,13 +389,13 @@ namespace CG_task3
         }
 
         private void rec_fill(Point p) {
-            if (!full_border.Contains(p) && !is_colored(p) && p.X >= 0 && p.X <= pictureBox1.Width && p.Y >= 0 && p.Y <= pictureBox1.Height) {
+            if (!full_border.Contains(p) && !inner_border.Contains(p) && !is_colored(p) && p.X >= 0 && p.X <= pictureBox1.Width && p.Y >= 0 && p.Y <= pictureBox1.Height) {
                 Point Start = new Point(p.X - 1, p.Y);
                 Point Finish = new Point(p.X + 1, p.Y);
-                while (!full_border.Contains(Start) && Start.X >= 0)
+                while (!inner_border.Contains(Start) && !full_border.Contains(Start) && Start.X >= 0)
                     Start.X -= 1;
                 Start.X += 1;
-                while (!full_border.Contains(Finish)  && Finish.X<pictureBox1.Width)
+                while (!inner_border.Contains(Finish) && !full_border.Contains(Finish)  && Finish.X<pictureBox1.Width)
                     Finish.X += 1;
                 Finish.X -= 1;
                 if(colored_lines.ContainsKey(p.Y))
